@@ -7,10 +7,11 @@ const CATEGORY_LABEL: Record<Category, string> = { university: 'University', tea
 const CATEGORIES = Object.keys(CATEGORY_LABEL) as Category[]
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const TODAY = dateKey(new Date())
+const HOUR_HEIGHT = 76
 type Editor = { source?: Occurrence; date: string; fields: BlockFields; frequency: 'none' | Frequency; scope: 'day' | 'future' }
 const defaultFields = (start: string | null = null): BlockFields => ({ title: '', category: 'personal', start, end: start ? clockFromMinutes(Math.min(minutes(start) + 60, 1439)) : null, location: '', notes: '', checklist: [] })
 function clockFromMinutes(value: number) { return `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}` }
-function dateTitle(key: string) { return parseDate(key).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) }
+function dateTitle(key: string) { return parseDate(key).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }) }
 function weekTitle(week: string) { const end = addDays(week, 6); const a = parseDate(week); const b = parseDate(end); return `${a.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${b.toLocaleDateString('en-US', { month: a.getMonth() === b.getMonth() ? undefined : 'short', day: 'numeric' })}` }
 function categoryClass(category: Category) { return `cat-${category}` }
 function timeParts(time: string) { const [h, m] = time.split(':').map(Number); return { hour: h % 12 || 12, minute: m, period: h < 12 ? 'AM' : 'PM' } }
@@ -46,7 +47,7 @@ export default function App() {
   useEffect(() => {
     if (!timelineRef.current) return
     const first = timed.length ? Math.max(0, minutes(timed[0].start!) - 60) : 7 * 60
-    timelineRef.current.scrollTop = first / 60 * 64
+    timelineRef.current.scrollTop = first / 60 * HOUR_HEIGHT
   }, [selectedDate])
   function say(message: string) { setToast(message); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToast(''), 4500) }
   async function refresh() { setData(await loadData()) }
@@ -148,7 +149,7 @@ export default function App() {
     if (event.target !== event.currentTarget && !(event.target as HTMLElement).classList.contains('timeline-hit')) return
     const rect = event.currentTarget.getBoundingClientRect()
     const clicked = event.clientY - rect.top + event.currentTarget.scrollTop
-    const value = Math.max(0, Math.min(23 * 60, Math.round(clicked / 64 * 60 / 30) * 30))
+    const value = Math.max(0, Math.min(23 * 60, Math.round(clicked / HOUR_HEIGHT * 60 / 30) * 30))
     openNew(selectedDate, clockFromMinutes(value))
   }
 
@@ -165,7 +166,7 @@ export default function App() {
     <main className="main-content"><div className="day-head"><div><span className="eyebrow">{selectedDate === TODAY ? 'TODAY · ' : ''}{entries.length} {entries.length === 1 ? 'BLOCK' : 'BLOCKS'}</span><h2>{dateTitle(selectedDate)}</h2></div><button className="add-button" aria-label="Add block" onClick={() => openNew(selectedDate)}><Plus size={22} /></button></div>
       <div className="category-legend">{CATEGORIES.map(cat => <span key={cat}><i className={categoryClass(cat)} />{CATEGORY_LABEL[cat]}</span>)}</div>
       <section className="anytime-section"><div className="section-label"><span>ANYTIME</span><button onClick={() => openNew(selectedDate)}><Plus size={15} /> Add task</button></div>{anytime.length ? <div className="anytime-list">{anytime.map(item => <BlockCard key={item.key} item={item} compact conflict={false} checks={checks} onOpen={openExisting} onCheck={toggleCheck} />)}</div> : <button className="empty-anytime" onClick={() => openNew(selectedDate)}>Nothing planned here <Plus size={15} /></button>}</section>
-      <section className="timeline-section"><div className="section-label"><span>DAY TIMELINE</span><span className="hint">Tap a free time to add</span></div><div className="timeline-scroll" ref={timelineRef} onClick={timelineClick}><div className="timeline-canvas timeline-hit">{Array.from({ length: 24 }, (_, hour) => <div key={hour} className="hour-line timeline-hit" style={{ top: hour * 64 }}><span>{timeLabel(clockFromMinutes(hour * 60))}</span></div>)}{timed.map((item, index) => { const top = minutes(item.start!) / 60 * 64, height = Math.max(42, (minutes(item.end!) - minutes(item.start!)) / 60 * 64); const conflict = conflicts.has(item.key); return <div key={item.key} className={`timeline-position ${conflict ? `overlap-lane lane-${index % 2}` : ''}`} style={{ top, height }}><BlockCard item={item} conflict={conflict} checks={checks} onOpen={openExisting} onCheck={toggleCheck} /></div> })}</div></div></section>
+      <section className="timeline-section"><div className="section-label"><span>DAY TIMELINE</span><span className="hint">Tap a free time to add</span></div><div className="timeline-scroll" ref={timelineRef} onClick={timelineClick}><div className="timeline-canvas timeline-hit">{Array.from({ length: 24 }, (_, hour) => <div key={hour} className="hour-line timeline-hit" style={{ top: hour * HOUR_HEIGHT }}><span>{timeLabel(clockFromMinutes(hour * 60))}</span></div>)}{timed.map((item, index) => { const top = minutes(item.start!) / 60 * HOUR_HEIGHT, height = Math.max(56, (minutes(item.end!) - minutes(item.start!)) / 60 * HOUR_HEIGHT); const conflict = conflicts.has(item.key); return <div key={item.key} className={`timeline-position ${conflict ? `overlap-lane lane-${index % 2}` : ''}`} style={{ top, height }}><BlockCard item={item} conflict={conflict} checks={checks} onOpen={openExisting} onCheck={toggleCheck} /></div> })}</div></div></section>
       <p className="footer-note">Your plans stay on this device. Export a backup from Settings.</p>
     </main>
     <button className="floating-add" onClick={() => openNew(selectedDate)}><Plus size={23} /> New block</button>
@@ -174,7 +175,7 @@ export default function App() {
     {editor && <div className="overlay" onMouseDown={e => { if (e.target === e.currentTarget) setEditor(null) }}><div className="sheet editor-sheet" role="dialog" aria-modal="true" aria-label={editor.source ? 'Edit block' : 'New block'}><div className="sheet-handle" /><div className="sheet-top"><div><span className="eyebrow">{editor.source ? 'EDIT YOUR PLAN' : 'MAKE A PLAN'}</span><h2>{editor.source ? 'Edit block' : 'New block'}</h2></div><button className="icon-button" aria-label="Close editor" onClick={() => setEditor(null)}><X size={21} /></button></div>
       <div className="sheet-body"><label className="field-label">WHAT ARE YOU PLANNING?<input autoFocus placeholder="e.g. Gym, project work, class…" value={editor.fields.title} onChange={e => setEditor({ ...editor, fields: { ...editor.fields, title: e.target.value } })} /></label>
         <div className="field-label">CATEGORY<div className="category-picker">{CATEGORIES.map(cat => <button key={cat} className={`${categoryClass(cat)} ${editor.fields.category === cat ? 'selected' : ''}`} onClick={() => setEditor({ ...editor, fields: { ...editor.fields, category: cat } })}>{CATEGORY_LABEL[cat]}</button>)}</div></div>
-        <div className="editor-grid"><label className="field-label">DATE<input type="date" value={editor.date} onChange={e => setEditor({ ...editor, date: e.target.value })} /></label><label className="field-label">REPEAT<select value={editor.frequency} disabled={!!editor.source?.ruleId && editor.scope === 'day'} onChange={e => setEditor({ ...editor, frequency: e.target.value as Editor['frequency'] })}><option value="none">Doesn't repeat</option><option value="weekly">Every week</option><option value="biweekly">Every 2 weeks</option></select></label></div>
+        <div className="editor-grid"><label className="field-label">DATE<input type="date" value={editor.date} onChange={e => setEditor({ ...editor, date: e.target.value })} /></label><label className="field-label">REPEAT<select value={editor.frequency} disabled={!!editor.source?.ruleId && editor.scope === 'day'} onChange={e => setEditor({ ...editor, frequency: e.target.value as Editor['frequency'] })}><option value="none">Once</option><option value="weekly">Every week</option><option value="biweekly">Every 2 weeks</option></select></label></div>
         {editor.source?.ruleId && <div className="scope-picker"><span><Repeat2 size={16} /> Apply changes to</span><div><button className={editor.scope === 'day' ? 'selected' : ''} onClick={() => setEditor({ ...editor, scope: 'day' })}>This day</button><button className={editor.scope === 'future' ? 'selected' : ''} onClick={() => setEditor({ ...editor, scope: 'future' })}>This & future</button></div></div>}
         <label className="anytime-toggle"><input type="checkbox" checked={editor.fields.start === null} onChange={e => setEditor({ ...editor, fields: { ...editor.fields, start: e.target.checked ? null : '09:00', end: e.target.checked ? null : '10:00' } })} /> No set time <span>Put it in Anytime</span></label>
         {editor.fields.start && editor.fields.end && <div className="editor-grid"><TimeField label="START" value={editor.fields.start} onChange={value => setEditor({ ...editor, fields: { ...editor.fields, start: value } })} /><TimeField label="END" value={editor.fields.end} onChange={value => setEditor({ ...editor, fields: { ...editor.fields, end: value } })} /></div>}

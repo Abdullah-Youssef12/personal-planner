@@ -1,0 +1,54 @@
+/* A roomier type scale for the weekly overview, timeline, and editor. */
+.brand-row h1 { font-size: 32px; }
+.eyebrow { font-size: 12px; }
+.week-heading h2 { font-size: 35px; }
+.week-controls .today-button { font-size: 14px; }
+.week-controls button { min-width: 40px; height: 40px; }
+
+.week-strip { gap: 7px; }
+.day-chip { gap: 6px; padding: 13px 3px 11px; }
+.day-chip span { font-size: 12px; }
+.day-chip strong { font-size: 25px; line-height: 1; }
+.day-chip i { height: 10px; }
+.day-chip i b { width: 5px; height: 5px; }
+
+.day-head h2 { font-size: 33px; }
+.category-legend span { font-size: 12px; }
+.section-label { font-size: 12px; }
+.section-label button, .section-label .hint { font-size: 13px; }
+.empty-anytime { min-height: 55px; font-size: 14px; }
+.timeline-canvas { height: 1824px; }
+.hour-line span { left: 7px; top: -8px; width: 80px; font-size: 12px; }
+.timeline-position { left: 100px; }
+.timeline-position.overlap-lane { width: calc((100% - 116px) / 2); }
+.block-card, .block-card.compact { min-height: 56px; }
+.block-open { padding: 10px 12px; gap: 4px; }
+.block-category { font-size: 11px; }
+.block-open strong { font-size: 15px; }
+.block-meta, .block-checklist button { font-size: 12px; }
+.more-checks, .conflict { font-size: 11px; }
+.footer-note { font-size: 13px; }
+.floating-add, .primary-action { font-size: 15px; }
+
+.sheet h2 { font-size: 32px; }
+.field-label, .time-field { font-size: 12px; }
+.field-label input, .field-label select, .field-label textarea,
+.checklist-edit-row input, .time-controls select, .time-controls input { font-size: 16px; }
+.category-picker button, .scope-picker span, .scope-picker button,
+.anytime-toggle span, .secondary-actions button { font-size: 13px; }
+.anytime-toggle { font-size: 15px; }
+.settings-card h3 { font-size: 20px; }
+.settings-card p, .settings-actions button, .rule-row strong,
+.empty-rule { font-size: 14px; }
+.rule-row small, .settings-card .microcopy { font-size: 12px; }
+
+@media (max-width: 390px) {
+  .week-heading h2 { font-size: 29px; }
+  .week-strip { gap: 4px; }
+  .day-chip { padding: 12px 1px 10px; }
+  .day-chip span { font-size: 10px; }
+  .day-chip strong { font-size: 22px; }
+  .day-head h2 { font-size: 29px; }
+  .category-legend { gap: 10px; }
+  .time-controls { padding: 0 4px; }
+}
