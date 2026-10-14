@@ -1,0 +1,75 @@
+/* Safari date and select controls have large intrinsic widths. Keep every
+   editor control inside its own available space, including with larger text. */
+.sheet,
+.sheet-body,
+.editor-grid,
+.editor-grid > *,
+.field-label,
+.time-field {
+  min-width: 0;
+}
+
+.sheet-body { overflow-x: hidden; }
+.editor-grid input[type='date'],
+.editor-grid .field-label > select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.time-controls {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 7px;
+  padding: 6px;
+}
+.time-controls select,
+.time-controls select:first-child,
+.time-controls select:last-child {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  padding: 0 5px;
+  border: 1px solid #465358;
+  border-radius: 8px;
+  background: #303b3e;
+  color: #f5f6ef;
+  text-align: center;
+  text-align-last: center;
+  font-size: 16px;
+}
+.time-separator {
+  color: #c6d2cd;
+  font-size: 18px;
+  font-weight: 800;
+}
+.category-picker button,
+.scope-picker button { min-height: 42px; }
+.settings-actions button { min-height: 48px; }
+.rule-list { padding-right: 12px; }
+
+@media (max-width: 600px) {
+  .editor-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .sheet-body { padding-inline: 18px; }
+  .rule-list { max-height: none; overflow: visible; }
+  .editor-grid input[type='date'],
+  .editor-grid .field-label > select { min-height: 48px; }
+  .time-controls { min-height: 60px; }
+  .time-controls select,
+  .time-controls select:first-child,
+  .time-controls select:last-child { height: 44px; }
+}
+
+@media (max-width: 360px) {
+  .settings-actions { grid-template-columns: minmax(0, 1fr); }
+}
