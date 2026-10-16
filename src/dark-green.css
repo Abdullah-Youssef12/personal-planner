@@ -1,0 +1,38 @@
+/* Green dark mode surfaces, including the editor and native form controls. */
+@media (prefers-color-scheme: dark) {
+  :root { color-scheme: dark; background: #123923; color: #f1f8ee; }
+  .app-shell { background: radial-gradient(ellipse 85% 460px at 50% -240px, #4f815344 0%, transparent 80%), #123923; }
+  .app-header { background: linear-gradient(160deg, #245538 0%, #1b492e 65%, #153d28 100%); border-color: #4b7855; }
+  .eyebrow, .category-legend span, .section-label, .block-meta,
+  .footer-note, .field-label, .time-field, .optional { color: #c0d5c3; }
+  .icon-button, .week-controls button, .day-chip { background: #2a5a3c; border-color: #568461; color: #f1f8ee; }
+  .day-chip.active { background: #d6f36a; color: #1e281c; border-color: #d6f36a; }
+  .day-chip.active strong { color: #1e281c; }
+  .empty-anytime { background: #1b492e; border-color: #66916a; color: #c4dac7; }
+  .timeline-scroll { background: #19432c; border-color: #4b7855; scrollbar-color: #6b9771 transparent; }
+  .hour-line { background: #3d6e4d; }
+  .hour-line span { color: #c0d5c3; }
+  .cat-university { --cat-bg: #234961; }
+  .cat-teaching { --cat-bg: #49395d; }
+  .cat-racing { --cat-bg: #634539; }
+  .cat-gym { --cat-bg: #4a512d; }
+  .cat-personal { --cat-bg: #245743; }
+  .overlay { background: #092016c9; }
+  .sheet, .sheet-actions { background: #1b492e; border-color: #5b8864; }
+  .sheet-top { border-color: #4b7855; }
+  .sheet-handle { background: #80a787; }
+  .field-label input, .field-label select, .field-label textarea,
+  .checklist-edit-row input, .time-controls, .time-controls select,
+  .time-controls select:first-child, .time-controls select:last-child,
+  .category-picker button, .scope-picker button, .settings-actions button {
+    background: #245538; border-color: #66916a; color: #f1f8ee;
+  }
+  .category-picker button.selected { background: var(--cat-bg); border-color: var(--cat); color: var(--cat); }
+  .scope-picker, .settings-card { background: #245538; border-color: #66916a; }
+  .scope-picker button.selected { background: #d6f36a; color: #202920; }
+  .sheet-actions { border-top-color: #4b7855; }
+  .rule-row { border-color: #4b7855; }
+  .rule-row small, .settings-card p, .settings-card .microcopy,
+  .secondary-actions button, .anytime-toggle span { color: #c0d5c3; }
+  .secondary-actions .danger { color: #ffb3a9; }
+}
