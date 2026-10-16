@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     base,
     plugins: [react(), VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon-green.png'],
       manifest: {
         id: base,
         name: 'Planner — Your week, clearly',
